@@ -16,7 +16,7 @@ A minimal URL shortening service built with Django and MongoDB.
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YourUsername/firstname-innovaxel-lastname.git
+   git clone https://github.com/muhammadinzamamamjad/inzamam-innovaxel-amjad
    
 2.Create and activate a virtual environment:
   python -m venv venv
@@ -30,6 +30,6 @@ A minimal URL shortening service built with Django and MongoDB.
 6. Run the development server:
   python manage.py runserver
 
-#Usage
+# Usage
   Access the frontend at: http://127.0.0.1:8000/static/index.html
   Interact with the APIs using the frontend.
