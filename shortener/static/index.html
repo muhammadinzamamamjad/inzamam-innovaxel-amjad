@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        input, button {
+            padding: 8px;
+            margin-top: 10px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        hr {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>URL Shortener</h1>
+
+    <!-- Create Short URL -->
+    <div>
+        <h3>Create Short URL</h3>
+        <input type="text" id="originalUrl" placeholder="Enter URL to shorten" />
+        <button onclick="createShortUrl()">Shorten URL</button>
+    </div>
+
+    <hr>
+
+    <!-- Retrieve Original URL -->
+    <div>
+        <h3>Retrieve Original URL</h3>
+        <input type="text" id="shortCode" placeholder="Enter Short Code" />
+        <button onclick="retrieveUrl()">Retrieve URL</button>
+        <div id="retrievedUrl"></div>
+    </div>
+
+    <hr>
+
+    <!-- Update URL -->
+    <div>
+        <h3>Update Short URL</h3>
+        <input type="text" id="updateShortCode" placeholder="Enter Short Code" />
+        <input type="text" id="newUrl" placeholder="Enter New URL" />
+        <button onclick="updateShortUrl()">Update URL</button>
+    </div>
+
+    <hr>
+
+    <!-- Delete URL -->
+    <div>
+        <h3>Delete Short URL</h3>
+        <input type="text" id="deleteShortCode" placeholder="Enter Short Code" />
+        <button onclick="deleteShortUrl()">Delete URL</button>
+    </div>
+
+    <hr>
+
+    <!-- Get URL Statistics -->
+    <div>
+        <h3>Get URL Statistics</h3>
+        <input type="text" id="statsShortCode" placeholder="Enter Short Code" />
+        <button onclick="getUrlStats()">Get Stats</button>
+        <div id="urlStats"></div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://127.0.0.1:8000/shorten/';
+
+        async function createShortUrl() {
+            const url = document.getElementById('originalUrl').value;
+
+            const response = await fetch(BASE_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            });
+
+            const result = await response.json();
+            alert(`Short URL Created: ${result.shortCode}`);
+        }
+
+        async function retrieveUrl() {
+            const shortCode = document.getElementById('shortCode').value;
+
+            const response = await fetch(`${BASE_URL}${shortCode}/`);
+            const result = await response.json();
+
+            if (response.status === 200) {
+                document.getElementById('retrievedUrl').innerText = `Original URL: ${result.url}`;
+            } else {
+                alert(result.error);
+            }
+        }
+
+        async function updateShortUrl() {
+            const shortCode = document.getElementById('updateShortCode').value;
+            const newUrl = document.getElementById('newUrl').value;
+
+            const response = await fetch(`${BASE_URL}${shortCode}/update/`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: newUrl })
+            });
+
+            const result = await response.json();
+
+            if (response.status === 200) {
+                alert('URL Updated Successfully!');
+            } else {
+                alert(result.error);
+            }
+        }
+
+        async function deleteShortUrl() {
+            const shortCode = document.getElementById('deleteShortCode').value;
+
+            const response = await fetch(`${BASE_URL}${shortCode}/delete/`, {
+                method: 'DELETE'
+            });
+
+            if (response.status === 204) {
+                alert('Short URL Deleted Successfully!');
+            } else {
+                const result = await response.json();
+                alert(result.error);
+            }
+        }
+
+        async function getUrlStats() {
+            const shortCode = document.getElementById('statsShortCode').value;
+
+            const response = await fetch(`${BASE_URL}${shortCode}/stats/`);
+            const result = await response.json();
+
+            if (response.status === 200) {
+                document.getElementById('urlStats').innerText = `
+                    URL: ${result.url}
+                    Created At: ${result.createdAt}
+                    Updated At: ${result.updatedAt}
+                    Access Count: ${result.accessCount}
+                `;
+            } else {
+                alert(result.error);
+            }
+        }
+    </script>
+</body>
+</html>
