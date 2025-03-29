@@ -4,7 +4,7 @@ A minimal URL shortening service built with Django and MongoDB.
 
 ## Features
 - Create, retrieve, update, and delete short URLs.
-- Redirect to original URLs using short codes.
+- Redirect to original URLs  using short codes.
 - Track access statistics for each short URL.
 - Minimal frontend for user interaction.
 
